@@ -2,16 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { CreateTransactionDto } from '../dto/create-transaction.dto';
 import { UpdateTransactionDto } from '../dto/update-transaction.dto';
 import { TransactionsRepository } from 'src/shared/database/repositories/transactions.repository';
-import { ValidateBankAccountOwnerShipService } from '../../bank-accounts/services/validate-bank-account-ownership-service';
 import { ValidateCategoryOwnerShipService } from '../../categories/services/validate-category-ownership-service';
 import { ValidateTransactionOwnerShipService } from './validate-transaction-ownership-service';
 import { TransactionType } from '../entities/Transaction';
+import { ValidateBankAccountOwnershipService } from 'src/modules/bank-accounts/services/validate-bank-account-ownership.service';
 
 @Injectable()
 export class TransactionsService {
   constructor(
     private readonly transactionsRepo: TransactionsRepository,
-    private readonly validateBankAccountOwnerShipService: ValidateBankAccountOwnerShipService,
+    private readonly validateBankAccountOwnerShipService: ValidateBankAccountOwnershipService,
     private readonly validateCategoryOwnerShipService: ValidateCategoryOwnerShipService,
     private readonly validateTransactionOwnerShipService: ValidateTransactionOwnerShipService,
   ) {}
@@ -50,9 +50,7 @@ export class TransactionsService {
         bankAccountId: filters.bankAccountId,
         type: filters.type,
         date: {
-          // gte -> Greater than equal
           gte: new Date(Date.UTC(filters.year, filters.month)),
-          // lt -> lower than
           lt: new Date(Date.UTC(filters.year, filters.month + 1)),
         },
       },

@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBankAccountDto } from '../dto/create-bank-account.dto';
 import { UpdateBankAccountDto } from '../dto/update-bank-account.dto';
+import { ValidateBankAccountOwnershipService } from './validate-bank-account-ownership.service';
 import { BankAccountsRepository } from 'src/shared/database/repositories/bank-accounts.repository';
-import { ValidateBankAccountOwnerShipService } from './validate-bank-account-ownership-service';
 
 @Injectable()
 export class BankAccountsService {
   constructor(
     private readonly bankAccountsRepo: BankAccountsRepository,
-    private readonly validateBankAccountOwnerShipService: ValidateBankAccountOwnerShipService,
+    private readonly validateBankAccountOwnershipService: ValidateBankAccountOwnershipService,
   ) {}
 
   create(userId: string, createBankAccountDto: CreateBankAccountDto) {
@@ -52,7 +52,6 @@ export class BankAccountsService {
 
       return {
         ...bankAccount,
-        transactions,
         currentBalance,
       };
     });
@@ -63,7 +62,7 @@ export class BankAccountsService {
     bankAccountId: string,
     updateBankAccountDto: UpdateBankAccountDto,
   ) {
-    await this.validateBankAccountOwnerShipService.validate(
+    await this.validateBankAccountOwnershipService.validate(
       userId,
       bankAccountId,
     );
@@ -73,7 +72,6 @@ export class BankAccountsService {
     return this.bankAccountsRepo.update({
       where: { id: bankAccountId },
       data: {
-        userId,
         color,
         initialBalance,
         name,
@@ -83,7 +81,7 @@ export class BankAccountsService {
   }
 
   async remove(userId: string, bankAccountId: string) {
-    await this.validateBankAccountOwnerShipService.validate(
+    await this.validateBankAccountOwnershipService.validate(
       userId,
       bankAccountId,
     );

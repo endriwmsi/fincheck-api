@@ -3,9 +3,9 @@ import {
   Get,
   Post,
   Body,
-  Put,
   Param,
   Delete,
+  Put,
   ParseUUIDPipe,
   HttpCode,
   HttpStatus,
@@ -36,7 +36,7 @@ export class BankAccountsController {
   update(
     @ActiveUserId() userId: string,
     @Param('bankAccountId', ParseUUIDPipe) bankAccountId: string,
-    updateBankAccountDto: UpdateBankAccountDto,
+    @Body() updateBankAccountDto: UpdateBankAccountDto,
   ) {
     return this.bankAccountsService.update(
       userId,
@@ -49,7 +49,8 @@ export class BankAccountsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(
     @ActiveUserId() userId: string,
-    @Param('bankAccountId', ParseUUIDPipe) bankAccountId: string,
+    @Param('bankAccountId', ParseUUIDPipe)
+    bankAccountId: string,
   ) {
     return this.bankAccountsService.remove(userId, bankAccountId);
   }

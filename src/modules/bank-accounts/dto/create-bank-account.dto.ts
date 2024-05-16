@@ -21,7 +21,7 @@ export class CreateBankAccountDto {
   type: BankAccountType;
 
   @IsString()
-  @IsHexColor()
   @IsNotEmpty()
+  @IsHexColor()
   color: string;
 }
